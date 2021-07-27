@@ -41,15 +41,15 @@ public class GenerarIdOperacion {
 	List<List<String>> listOfAmbientes;
 	private int idProyecto;
 	private int idOperacion;
+	private static final String SEPARADOR= "-----------------------";
 	Logger logger = LoggerFactory.getLogger(GenerarIdOperacion.class);
 	
 	@GetMapping("/project/valida")
 	public Boolean validaIntegridadIdProyecto() {
 		List<Integer> listOfIdProyectos = new ArrayList<>();
-		Proyecto proyectoResponse = new Proyecto();
-		logger.info("-----------------------");
+		logger.info(SEPARADOR);
 		logger.info("- Ambientes que valida ID Proyecto -");
-		logger.info("-----------------------");
+		logger.info(SEPARADOR);
 		for(List<String> ambiente:listOfAmbientes) {
 
 			String nombreAmbiente = ambiente.get(0);
@@ -79,7 +79,6 @@ public class GenerarIdOperacion {
 			logger.info("****");
 			//Consumo de API   
 			ResponseEntity<Proyecto> response = new RestTemplate(requestFactory).exchange(uri.toUriString(), HttpMethod.GET, entity, Proyecto.class);
-			proyectoResponse = response.getBody();
 			listOfIdProyectos.add(response.getBody().getIdProject());
 		}
 		//listOfIdProyectos.stream().forEach(System.out::println);
@@ -96,10 +95,9 @@ public class GenerarIdOperacion {
 	public Boolean validaUltimosIdOperacion(){
 		
 		List<Integer> listOfIdOperacion = new ArrayList<>();
-		OperacionObjectResponse operacionResponse = new OperacionObjectResponse();
-		logger.info("-----------------------");
+		logger.info(SEPARADOR);
 		logger.info("- Ambientes que valida ID Operacion -");
-		logger.info("-----------------------");
+		logger.info(SEPARADOR);
 		for(List<String> ambiente:listOfAmbientes) {
 
 			String nombreAmbiente = ambiente.get(0);
@@ -129,7 +127,6 @@ public class GenerarIdOperacion {
 			logger.info("****");
 			//Consumo de API   
 			ResponseEntity<OperacionObjectResponse> response = new RestTemplate(requestFactory).exchange(uri.toUriString(), HttpMethod.GET, entity, OperacionObjectResponse.class);
-			operacionResponse = response.getBody();
 			listOfIdOperacion.add(response.getBody().getIdProject());
 		}
 		if(listOfIdOperacion.stream().distinct().collect(Collectors.toList()).size() == 1) {
@@ -142,14 +139,14 @@ public class GenerarIdOperacion {
 		}
 	}
 	@PostMapping("/generarNuevo")
-	public @ResponseBody() ResponseGenerarIdOperacion generarIdOperacion(@RequestBody() RequestGenerarIdOperacion request) {
+	public @ResponseBody() ResponseGenerarIdOperacion nuevoProyectoConIdOperacion(@RequestBody() RequestGenerarIdOperacion request) {
 		ResponseGenerarIdOperacion response = new ResponseGenerarIdOperacion();
 		if(validaIntegridadIdProyecto()) {
 			if(validaUltimosIdOperacion()) {
 				
 				for(List<String> ambiente:listOfAmbientes) {
 					
-					String nombreAmbiente = ambiente.get(0);
+					//String nombreAmbiente = ambiente.get(0);
 					String protocoloAmbiente = ambiente.get(1);
 					String hostAmbiente = ambiente.get(2);
 					int countIdProyecto = idProyecto+1;
