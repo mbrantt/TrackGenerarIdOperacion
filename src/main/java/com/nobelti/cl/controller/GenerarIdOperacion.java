@@ -73,7 +73,7 @@ public class GenerarIdOperacion {
 			UriComponents uri = UriComponentsBuilder.newInstance()
 									.scheme(protocoloAmbiente)
 									.host(hostAmbiente)
-									.path("/TrackSystemApi/dal/track/project/last")
+									.path("/tracksystemapi/dal/track/project/last")
 									.build();
 			logger.info("URL api => "+uri.toUriString());
 			logger.info("****");
@@ -121,7 +121,7 @@ public class GenerarIdOperacion {
 			UriComponents uri = UriComponentsBuilder.newInstance()
 									.scheme(protocoloAmbiente)
 									.host(hostAmbiente)
-									.path("/TrackSystemApi/dal/track/operation/last")
+									.path("/tracksystemapi/dal/track/operation/last")
 									.build();
 			logger.info("URL api => "+uri.toUriString());
 			logger.info("****");
@@ -166,7 +166,7 @@ public class GenerarIdOperacion {
 						UriComponents uriProyecto = UriComponentsBuilder.newInstance()
 												.scheme(protocoloAmbiente)
 												.host(hostAmbiente)
-												.path("/TrackSystemApi/dal/track/project/create")
+												.path("/tracksystemapi/dal/track/project/create")
 												.queryParam("id_proyecto", countIdProyecto)
 												.queryParam("nombre_proyecto", request.getNombreProyecto())
 												.build();
@@ -199,7 +199,7 @@ public class GenerarIdOperacion {
 							UriComponents uriOperacion = UriComponentsBuilder.newInstance()
 													.scheme(protocoloAmbiente)
 													.host(hostAmbiente)
-													.path("/TrackSystemApi/dal/track/operation/create")
+													.path("/tracksystemapi/dal/track/operation/create")
 													.queryParam("id_operacion", countIdOperacion)
 													.queryParam("id_proyecto", countIdProyecto)
 													.queryParam("nombre_operacion", elementos)
