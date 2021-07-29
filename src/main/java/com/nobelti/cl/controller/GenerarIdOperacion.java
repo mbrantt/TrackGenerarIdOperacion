@@ -36,6 +36,19 @@ import com.nobelti.cl.model.ResponseGenerarIdOperacion;
 @RestController
 @RequestMapping("/api/track")
 public class GenerarIdOperacion {
+
+	/* Spring Security (Cors) */
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurer() {
+        @Override
+        public void addCorsMappings(CorsRegistry registry) {
+            registry.addMapping("/**")
+                    .allowedOrigins("*")
+                    .allowedMethods("GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS");
+        	}
+    	};
+	}
 	
 	@Value("#{'${property.ambientes}'.split('-')}")
 	List<List<String>> listOfAmbientes;
