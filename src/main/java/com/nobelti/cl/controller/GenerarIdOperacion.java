@@ -54,15 +54,15 @@ public class GenerarIdOperacion {
 	List<List<String>> listOfAmbientes;
 	private int idProyecto;
 	private int idOperacion;
+	private static final String SEPARADOR= "-----------------------";
 	Logger logger = LoggerFactory.getLogger(GenerarIdOperacion.class);
 	
 	@GetMapping("/project/valida")
 	public Boolean validaIntegridadIdProyecto() {
 		List<Integer> listOfIdProyectos = new ArrayList<>();
-		Proyecto proyectoResponse = new Proyecto();
-		logger.info("-----------------------");
+		logger.info(SEPARADOR);
 		logger.info("- Ambientes que valida ID Proyecto -");
-		logger.info("-----------------------");
+		logger.info(SEPARADOR);
 		for(List<String> ambiente:listOfAmbientes) {
 
 			String nombreAmbiente = ambiente.get(0);
@@ -86,13 +86,12 @@ public class GenerarIdOperacion {
 			UriComponents uri = UriComponentsBuilder.newInstance()
 									.scheme(protocoloAmbiente)
 									.host(hostAmbiente)
-									.path("/TrackSystemApi/dal/track/project/last")
+									.path("/tracksystemapi/dal/track/project/last")
 									.build();
 			logger.info("URL api => "+uri.toUriString());
 			logger.info("****");
 			//Consumo de API   
 			ResponseEntity<Proyecto> response = new RestTemplate(requestFactory).exchange(uri.toUriString(), HttpMethod.GET, entity, Proyecto.class);
-			proyectoResponse = response.getBody();
 			listOfIdProyectos.add(response.getBody().getIdProject());
 		}
 		//listOfIdProyectos.stream().forEach(System.out::println);
@@ -109,10 +108,9 @@ public class GenerarIdOperacion {
 	public Boolean validaUltimosIdOperacion(){
 		
 		List<Integer> listOfIdOperacion = new ArrayList<>();
-		OperacionObjectResponse operacionResponse = new OperacionObjectResponse();
-		logger.info("-----------------------");
+		logger.info(SEPARADOR);
 		logger.info("- Ambientes que valida ID Operacion -");
-		logger.info("-----------------------");
+		logger.info(SEPARADOR);
 		for(List<String> ambiente:listOfAmbientes) {
 
 			String nombreAmbiente = ambiente.get(0);
@@ -136,13 +134,12 @@ public class GenerarIdOperacion {
 			UriComponents uri = UriComponentsBuilder.newInstance()
 									.scheme(protocoloAmbiente)
 									.host(hostAmbiente)
-									.path("/TrackSystemApi/dal/track/operation/last")
+									.path("/tracksystemapi/dal/track/operation/last")
 									.build();
 			logger.info("URL api => "+uri.toUriString());
 			logger.info("****");
 			//Consumo de API   
 			ResponseEntity<OperacionObjectResponse> response = new RestTemplate(requestFactory).exchange(uri.toUriString(), HttpMethod.GET, entity, OperacionObjectResponse.class);
-			operacionResponse = response.getBody();
 			listOfIdOperacion.add(response.getBody().getIdProject());
 		}
 		if(listOfIdOperacion.stream().distinct().collect(Collectors.toList()).size() == 1) {
@@ -155,14 +152,14 @@ public class GenerarIdOperacion {
 		}
 	}
 	@PostMapping("/generarNuevo")
-	public @ResponseBody() ResponseGenerarIdOperacion generarIdOperacion(@RequestBody() RequestGenerarIdOperacion request) {
+	public @ResponseBody() ResponseGenerarIdOperacion nuevoProyectoConIdOperacion(@RequestBody() RequestGenerarIdOperacion request) {
 		ResponseGenerarIdOperacion response = new ResponseGenerarIdOperacion();
 		if(validaIntegridadIdProyecto()) {
 			if(validaUltimosIdOperacion()) {
 				
 				for(List<String> ambiente:listOfAmbientes) {
 					
-					String nombreAmbiente = ambiente.get(0);
+					//String nombreAmbiente = ambiente.get(0);
 					String protocoloAmbiente = ambiente.get(1);
 					String hostAmbiente = ambiente.get(2);
 					int countIdProyecto = idProyecto+1;
@@ -182,7 +179,7 @@ public class GenerarIdOperacion {
 						UriComponents uriProyecto = UriComponentsBuilder.newInstance()
 												.scheme(protocoloAmbiente)
 												.host(hostAmbiente)
-												.path("/TrackSystemApi/dal/track/project/create")
+												.path("/tracksystemapi/dal/track/project/create")
 												.queryParam("id_proyecto", countIdProyecto)
 												.queryParam("nombre_proyecto", request.getNombreProyecto())
 												.build();
@@ -215,7 +212,7 @@ public class GenerarIdOperacion {
 							UriComponents uriOperacion = UriComponentsBuilder.newInstance()
 													.scheme(protocoloAmbiente)
 													.host(hostAmbiente)
-													.path("/TrackSystemApi/dal/track/operation/create")
+													.path("/tracksystemapi/dal/track/operation/create")
 													.queryParam("id_operacion", countIdOperacion)
 													.queryParam("id_proyecto", countIdProyecto)
 													.queryParam("nombre_operacion", elementos)
@@ -239,6 +236,58 @@ public class GenerarIdOperacion {
 				response.setCodigo(99);
 				response.setMensaje("Error validación: Ultimos Id de operación no coinciden, porfavor regularizar ambientes.");
 			}
+		}else {
+			response.setCodigo(99);
+			response.setMensaje("Error validación: Ultimos Id de proyectos no coinciden, porfavor regularizar ambientes.");
+		}
+		return response;
+	}
+
+	@PostMapping("/project/create")
+	public @ResponseBody() ResponseGenerarIdOperacion crearProyecto(@RequestBody() RequestGenerarIdOperacion request) {
+		ResponseGenerarIdOperacion response = new ResponseGenerarIdOperacion();
+		if(validaIntegridadIdProyecto()) {
+			
+				
+				for(List<String> ambiente:listOfAmbientes) {
+					
+					//String nombreAmbiente = ambiente.get(0);
+					String protocoloAmbiente = ambiente.get(1);
+					String hostAmbiente = ambiente.get(2);
+					int countIdProyecto = idProyecto+1;
+					logger.info("IdProyecto: "+idProyecto);
+					logger.info("count IdProyecto: "+countIdProyecto);
+					//PRIMERO se genera el IdProyecto
+						//Se arma cuerpo del request (no se envia nada para esta API)
+						HttpHeaders headersProyecto = new HttpHeaders();
+						HttpEntity<String> entityProyecto = new HttpEntity<String>("parameters", headersProyecto);
+						CloseableHttpClient httpClientProyecto = HttpClients.custom()
+						        .setSSLHostnameVerifier(new NoopHostnameVerifier())
+						        .build();
+						HttpComponentsClientHttpRequestFactory requestFactoryProyecto = new HttpComponentsClientHttpRequestFactory();
+						requestFactoryProyecto.setHttpClient(httpClientProyecto);
+						
+						//Armado de URI
+						UriComponents uriProyecto = UriComponentsBuilder.newInstance()
+												.scheme(protocoloAmbiente)
+												.host(hostAmbiente)
+												.path("/tracksystemapi/dal/track/project/create")
+												.queryParam("id_proyecto", countIdProyecto)
+												.queryParam("nombre_proyecto", request.getNombreProyecto())
+												.build();
+						//logger.info(uriProyecto.toUriString());
+						//Consumo API proyecto
+						ResponseEntity<CommonResponse> responseProyecto = new RestTemplate(requestFactoryProyecto).exchange(uriProyecto.toUriString(), HttpMethod.POST, entityProyecto, CommonResponse.class);
+						if(responseProyecto.getBody().getCodigo() != 0) {
+							response.setCodigo(99);
+							response.setMensaje("Error al insertar proyecto: " + responseProyecto.getBody().getMensaje());
+							break;
+						}
+						response.setIdProyecto(countIdProyecto);
+						response.setNombreProyecto(request.getNombreProyecto());
+						
+					
+				}
 		}else {
 			response.setCodigo(99);
 			response.setMensaje("Error validación: Ultimos Id de proyectos no coinciden, porfavor regularizar ambientes.");
