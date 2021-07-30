@@ -230,4 +230,56 @@ public class GenerarIdOperacion {
 		return response;
 	}
 
+	@PostMapping("/project/create")
+	public @ResponseBody() ResponseGenerarIdOperacion crearProyecto(@RequestBody() RequestGenerarIdOperacion request) {
+		ResponseGenerarIdOperacion response = new ResponseGenerarIdOperacion();
+		if(validaIntegridadIdProyecto()) {
+			
+				
+				for(List<String> ambiente:listOfAmbientes) {
+					
+					//String nombreAmbiente = ambiente.get(0);
+					String protocoloAmbiente = ambiente.get(1);
+					String hostAmbiente = ambiente.get(2);
+					int countIdProyecto = idProyecto+1;
+					logger.info("IdProyecto: "+idProyecto);
+					logger.info("count IdProyecto: "+countIdProyecto);
+					//PRIMERO se genera el IdProyecto
+						//Se arma cuerpo del request (no se envia nada para esta API)
+						HttpHeaders headersProyecto = new HttpHeaders();
+						HttpEntity<String> entityProyecto = new HttpEntity<String>("parameters", headersProyecto);
+						CloseableHttpClient httpClientProyecto = HttpClients.custom()
+						        .setSSLHostnameVerifier(new NoopHostnameVerifier())
+						        .build();
+						HttpComponentsClientHttpRequestFactory requestFactoryProyecto = new HttpComponentsClientHttpRequestFactory();
+						requestFactoryProyecto.setHttpClient(httpClientProyecto);
+						
+						//Armado de URI
+						UriComponents uriProyecto = UriComponentsBuilder.newInstance()
+												.scheme(protocoloAmbiente)
+												.host(hostAmbiente)
+												.path("/tracksystemapi/dal/track/project/create")
+												.queryParam("id_proyecto", countIdProyecto)
+												.queryParam("nombre_proyecto", request.getNombreProyecto())
+												.build();
+						//logger.info(uriProyecto.toUriString());
+						//Consumo API proyecto
+						ResponseEntity<CommonResponse> responseProyecto = new RestTemplate(requestFactoryProyecto).exchange(uriProyecto.toUriString(), HttpMethod.POST, entityProyecto, CommonResponse.class);
+						if(responseProyecto.getBody().getCodigo() != 0) {
+							response.setCodigo(99);
+							response.setMensaje("Error al insertar proyecto: " + responseProyecto.getBody().getMensaje());
+							break;
+						}
+						response.setIdProyecto(countIdProyecto);
+						response.setNombreProyecto(request.getNombreProyecto());
+						
+					
+				}
+		}else {
+			response.setCodigo(99);
+			response.setMensaje("Error validación: Ultimos Id de proyectos no coinciden, porfavor regularizar ambientes.");
+		}
+		return response;
+	}
+
 }
