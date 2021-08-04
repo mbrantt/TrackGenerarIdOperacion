@@ -135,11 +135,14 @@ public class GenerarIdOperacion {
 			ResponseEntity<OperacionObjectResponse> response = new RestTemplate(requestFactory)
 					.exchange(uri.toUriString(), HttpMethod.GET, entity, OperacionObjectResponse.class);
 					listOfIdProyecto.add(response.getBody().getIdProject());
+			}
 		}
-	}
 
-		if (listOfIdProyecto.stream().distinct().collect(Collectors.toList()).size() == 1) {
-			idOperacion = listOfIdProyecto.get(0);
+		//if (listOfIdProyecto.stream().distinct().collect(Collectors.toList()).size() == 1) {
+
+			//Valida que proyecto sea diferente a -1 y que no venga null
+			if (listOfIdProyecto.get(idOperacion) != -1 && listOfIdProyecto.get(idOperacion) != null)  {
+			//idOperacion = listOfIdProyecto.get(0)
 			// logger.info("ID proyecto: " + idProyecto);
 			return true;
 		} else {
