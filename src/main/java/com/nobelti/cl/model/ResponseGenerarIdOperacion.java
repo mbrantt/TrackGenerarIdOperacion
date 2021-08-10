@@ -7,7 +7,22 @@ public class ResponseGenerarIdOperacion {
 	private String mensaje;
 	private int idProyecto;
 	private String nombreProyecto;
-	private List<Operacion> operaciones;
+
+	private int idOperacion;
+	private String nombreOperacion;
+	
+	public int getIdOperacion() {
+		return idOperacion;
+	}
+	public void setIdOperacion(int idOperacion) {
+		this.idOperacion = idOperacion;
+	}
+	public String getNombreOperacion() {
+		return nombreOperacion;
+	}
+	public void setNombreOperacion(String nombreOperacion) {
+		this.nombreOperacion = nombreOperacion;
+	}
 	
 	public int getCodigo() {
 		return codigo;
@@ -32,12 +47,6 @@ public class ResponseGenerarIdOperacion {
 	}
 	public void setNombreProyecto(String nombreProyecto) {
 		this.nombreProyecto = nombreProyecto;
-	}
-	public List<Operacion> getOperaciones() {
-		return operaciones;
-	}
-	public void setOperaciones(List<Operacion> operaciones) {
-		this.operaciones = operaciones;
 	}
 
 }

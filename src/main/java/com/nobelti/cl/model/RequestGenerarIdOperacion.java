@@ -3,20 +3,21 @@ package com.nobelti.cl.model;
 import java.util.List;
 
 public class RequestGenerarIdOperacion {
-	private String nombreProyecto;
-	private List<String> nombrePipeline;
+	private String idProyecto;
+	private String nombrePipeline;
 	
-	public String getNombreProyecto() {
-		return nombreProyecto;
+	public String getIdProyecto() {
+		return idProyecto;
 	}
-	public void setNombreProyecto(String nombreProyecto) {
-		this.nombreProyecto = nombreProyecto;
+	public void setIdProyecto(String idProyecto) {
+		this.idProyecto = idProyecto;
 	}
-	public List<String> getNombrePipeline() {
+	public String getNombrePipeline() {
 		return nombrePipeline;
 	}
-	public void setNombrePipeline(List<String> nombrePipeline) {
+	public void setNombrePipeline(String nombrePipeline) {
 		this.nombrePipeline = nombrePipeline;
 	}
+
 
 }
