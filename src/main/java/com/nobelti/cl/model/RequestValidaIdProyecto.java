@@ -4,15 +4,19 @@ import java.util.List;
 
 public class RequestValidaIdProyecto{
 
-    private List<Integer> iDProyecto;
-
-    public List<Integer> getiDProyecto() {
+    public static final String response = null;
+    private Integer iDProyecto;
+    
+    public static String getResponse() {
+        return response;
+    }
+    public Integer getiDProyecto() {
         return iDProyecto;
     }
-
-    public void setiDProyecto(List<Integer> iDProyecto) {
+    public void setiDProyecto(Integer iDProyecto) {
         this.iDProyecto = iDProyecto;
     }
+
 
 
 }

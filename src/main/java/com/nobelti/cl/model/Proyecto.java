@@ -8,7 +8,15 @@ public class Proyecto {
 	private String projectName;
 	private Date createdDate;
 	private String companyOwner;
+
+	private int idOperation;
 	
+	public int getIdOperation() {
+		return idOperation;
+	}
+	public void setIdOperation(int idOperation) {
+		this.idOperation = idOperation;
+	}
 	public int getIdProject() {
 		return idProject;
 	}
