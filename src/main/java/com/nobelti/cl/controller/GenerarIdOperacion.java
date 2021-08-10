@@ -327,8 +327,11 @@ public class GenerarIdOperacion {
 					response.setMensaje("Error al insertar proyecto: " + responseProyecto.getBody().getMensaje());
 					break;
 				}
+
+				response.setIdOperacion(idOperacion);
 				response.setIdProyecto(countIdProyecto);
 				response.setNombreProyecto(request.getNombreProyecto());
+				response.setMensaje("OK");
 
 			}
 		} else {
